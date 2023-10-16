@@ -1,0 +1,18 @@
+:host{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.board {
+    border: 3px solid black;
+    width: fit-content;
+}
+
+.row {
+    display: flex;
+}
+
+.movable:not(.dragging) {
+    transition: transform 300ms ease-in-out;
+  }

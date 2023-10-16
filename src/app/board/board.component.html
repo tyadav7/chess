@@ -1,1 +1,13 @@
-<p>board works!</p>
+<div class="board" (pick) = "onPiecePicked($event)" (drop) = "onPieceDropped($event)" appMovableArea>
+    <ng-container *ngFor="let row of view ; index as x">
+        <div class="row">
+            <ng-container *ngFor="let piece of row; index as y">
+                <app-cell [point]="{x: x, y:y}">
+                    <ng-container *ngIf="piece">
+                        <app-piece appMovable [appMovableReset]="(resetMove$ | async) || false" [piece]="piece"></app-piece>
+                    </ng-container>
+                </app-cell>
+            </ng-container>
+        </div>
+    </ng-container>
+</div>

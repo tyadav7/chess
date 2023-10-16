@@ -1,0 +1,17 @@
+.cell {
+    // width: calc(min(100vw/8 - 5px, 100vh/8 - 5px));
+    // height: calc(min(100vw/8 - 5px, 100vh/8 - 5px));
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.black {
+    background-color: brown ;
+}
+
+.white {
+    background-color: slateblue;
+}
