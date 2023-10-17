@@ -3,17 +3,31 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { BoardComponent } from './board/board.component';
 import { CellComponent } from './board/cell/cell.component';
-import { MovableAreaDirective } from './piece/movable-area.directive';
 import { DraggableDirective } from './piece/draggable.directive';
-import { PieceComponent } from './piece/piece.component';
+import { MovableAreaDirective } from './piece/movable-area.directive';
 import { MovableDirective } from './piece/movable.directive';
+import { ObstructionValidatorService as ObstructionValidatorService } from './piece/obstructors/obstruction.service';
+import { PieceComponent } from './piece/piece.component';
+import { BishopComponent } from './piece/pieces/bishop';
+import { KingComponent } from './piece/pieces/king';
+import { KnightComponent } from './piece/pieces/knight';
+import { PawnComponent } from './piece/pieces/pawn';
+import { QueenComponent } from './piece/pieces/queen';
+import { RookComponent } from './piece/pieces/rook';
+
 
 @NgModule({
   declarations: [
     AppComponent,
+    PieceComponent,
     BoardComponent,
     CellComponent,
-    PieceComponent,
+    PawnComponent,
+    RookComponent,
+    KingComponent,
+    QueenComponent,
+    BishopComponent,
+    KnightComponent,
     DraggableDirective,
     MovableDirective,
     MovableAreaDirective,
@@ -21,7 +35,9 @@ import { MovableDirective } from './piece/movable.directive';
   imports: [
     BrowserModule
   ],
-  providers: [],
+  providers: [
+    { provide: 'IObstructionValidator', useExisting: ObstructionValidatorService }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

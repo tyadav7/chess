@@ -4,7 +4,24 @@
             <ng-container *ngFor="let piece of row; index as y">
                 <app-cell [point]="{x: x, y:y}">
                     <ng-container *ngIf="piece">
-                        <app-piece appMovable [appMovableReset]="(resetMove$ | async) || false" [piece]="piece"></app-piece>
+                        <ng-container *ngIf="piece.name == 'Pawn'">
+                            <app-pawn appMovable [appMovableReset]="(resetMove$ | async) || false" [piece]="piece"></app-pawn>
+                        </ng-container>
+                        <ng-container *ngIf="piece.name == 'King'">
+                            <app-king appMovable [appMovableReset]="(resetMove$ | async) || false" [piece]="piece"></app-king>
+                        </ng-container>
+                        <ng-container *ngIf="piece.name == 'Rook'">
+                            <app-rook appMovable [appMovableReset]="(resetMove$ | async) || false" [piece]="piece"></app-rook>
+                        </ng-container>
+                        <ng-container *ngIf="piece.name == 'Queen'">
+                            <app-queen appMovable [appMovableReset]="(resetMove$ | async) || false" [piece]="piece"></app-queen>
+                        </ng-container>
+                        <ng-container *ngIf="piece.name == 'Knight'">
+                            <app-knight appMovable [appMovableReset]="(resetMove$ | async) || false" [piece]="piece"></app-knight>
+                        </ng-container>
+                        <ng-container *ngIf="piece.name == 'Bishop'">
+                            <app-bishop appMovable [appMovableReset]="(resetMove$ | async) || false" [piece]="piece"></app-bishop>
+                        </ng-container>
                     </ng-container>
                 </app-cell>
             </ng-container>
