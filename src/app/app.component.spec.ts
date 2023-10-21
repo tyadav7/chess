@@ -1,9 +1,21 @@
 import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { BoardComponent } from './board/board.component';
+import { BoardService } from './board/board.service';
+import { PlayerService } from './player/player.service';
+import { MockComponent } from 'ng-mocks';
 
 describe('AppComponent', () => {
   beforeEach(() => TestBed.configureTestingModule({
-    declarations: [AppComponent]
+    declarations: [AppComponent, MockComponent(BoardComponent)],
+    providers: [{
+      provide: 'IBoardService',
+      useClass: BoardService
+    },
+    {
+      provide: 'IPlayerService',
+      useClass: PlayerService
+    }]
   }));
 
   it('should create the app', () => {
@@ -18,10 +30,10 @@ describe('AppComponent', () => {
     expect(app.title).toEqual('chess');
   });
 
-  it('should render title', () => {
+  it('should render board-component', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('chess app is running!');
+    expect(compiled.querySelector('app-board')).toBeTruthy();
   });
 });

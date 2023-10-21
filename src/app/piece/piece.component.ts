@@ -1,13 +1,10 @@
-import { Component, Inject, Input } from '@angular/core';
+import { Directive, Inject, Input } from '@angular/core';
 import { IPiece } from './pieces/i-piece';
-import { PawnValidator } from './validators/pawn-validator';
+import { IMoveValidator } from './validators/i-move-validator';
 
-@Component({
-	selector: 'app-piece',
-	templateUrl: './piece.component.html',
-	styleUrls: ['./piece.component.scss'],
-})
-export class PieceComponent {
+
+@Directive({selector: 'app-piece'})
+export abstract class PieceComponent {
 
 	private _piece!: IPiece;
 	@Input()
@@ -22,6 +19,7 @@ export class PieceComponent {
 		return this._piece;
 	}
 
-	constructor(@Inject('IMoveValidator') private validator: PawnValidator) {
+	constructor(@Inject('IMoveValidator') private validator: IMoveValidator) {
+		console.log(validator);
 	}
 }

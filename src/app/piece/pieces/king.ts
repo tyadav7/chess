@@ -17,10 +17,6 @@ export class KingComponent extends PieceComponent {
 
 export class King extends Piece implements IPiece {
 
-    override validMove(to: IPoint): boolean {
-        return true;
-    }
-
     public get name() {
         return "King";
     }

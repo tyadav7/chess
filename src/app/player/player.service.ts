@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Player } from './player';
+import { IPlayerService } from './i-player.service';
 
 @Injectable({
 	providedIn: 'root'
 })
-export class PlayerService {
+export class PlayerService implements IPlayerService {
 
 	private _player1: Player = new Player('white', 'player 1');
 	private _player2: Player = new Player('black', 'player 2');

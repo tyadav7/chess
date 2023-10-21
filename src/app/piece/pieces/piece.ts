@@ -1,7 +1,7 @@
 import { IPoint } from "src/app/board/cell/cell.component";
 import { IMoveValidator } from "../validators/i-move-validator";
 import { IPiece } from "./i-piece";
-import { Player } from "src/app/player/player";
+import { IPlayer, Player } from "src/app/player/player";
 
 export abstract class Piece implements IPiece {
 
@@ -9,7 +9,7 @@ export abstract class Piece implements IPiece {
     abstract img: string;
     abstract name: string;
 
-    constructor(public position:IPoint, private _player: Player) {
+    constructor(public position:IPoint, private _player: IPlayer) {
 
     }
 
@@ -19,10 +19,6 @@ export abstract class Piece implements IPiece {
 
     public get moveValidator() {
         return this._moveValidator;
-    }
-
-    public validMove(to:IPoint): boolean {
-        return this.moveValidator.validate(this.position, to);
     }
 
     public get player() {

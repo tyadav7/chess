@@ -8,7 +8,7 @@ import { MoveValidator } from "./move-validator";
 })
 export class QueenValidator extends MoveValidator implements IMoveValidator {
 
-    override validate(from: IPoint, to: IPoint): boolean {
+    override validateMove(from: IPoint, to: IPoint): boolean {
         return true;
     }
 

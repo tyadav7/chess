@@ -1,9 +1,8 @@
 import { Component } from "@angular/core";
 import { PieceComponent } from "../piece.component";
+import { PawnValidator } from "../validators/pawn-validator";
 import { IPiece } from "./i-piece";
 import { Piece } from "./piece";
-import { PawnValidator } from "../validators/pawn-validator";
-import { ObstructionValidatorService } from "../obstructors/obstruction.service";
 
 
 @Component({

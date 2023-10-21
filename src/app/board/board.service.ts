@@ -10,11 +10,12 @@ import { Queen } from '../piece/pieces/queen';
 import { Rook } from '../piece/pieces/rook';
 import { Point } from './cell/cell.component';
 import { PlayerService } from '../player/player.service';
+import { IBoardService } from './i-board-service';
 
 @Injectable({
-	providedIn: 'root'
+	providedIn: 'root',
 })
-export class BoardService {
+export class BoardService implements IBoardService {
 
 	private _board: any[][] = [];
 	private _pickedPiece?: IPiece;
@@ -25,11 +26,11 @@ export class BoardService {
 		this.initPieces();
 	}
 
-	public set pickedPiece(piece: IPiece | undefined) {
+	private set pickedPiece(piece: IPiece | undefined) {
 		this._pickedPiece = piece;
 	}
 
-	public get pickedPiece(): IPiece | undefined {
+	private get pickedPiece(): IPiece | undefined {
 		if(this._pickedPiece)
 			return this._pickedPiece;
 		return undefined;
@@ -57,6 +58,7 @@ export class BoardService {
 
 		checkIfPieceIsAlreadyPicked();
 		this.pickedPiece = this._board[dropPosition.x][dropPosition.y];
+		console.log(this.pickedPiece);
 	}
 
 	public drop(position: Position) {
@@ -75,6 +77,7 @@ export class BoardService {
 			}
 		}
 
+		console.log(this.pickedPiece);
 		checkIfPieceIsPicked();
 		checkIfCorrectPlayer();
 		if(this.pickedPiece) {
@@ -82,9 +85,14 @@ export class BoardService {
 		}
 	}
 
-	public makeMove(pickedPiece: IPiece, to: Point) {
+	private makeMove(pickedPiece: IPiece, to: Point) {
 		let checkIfValidMove = () => {
-			return pickedPiece.moveValidator.validate(pickedPiece.position, to);
+			return pickedPiece.moveValidator.validateMove(pickedPiece.position, to);
+		}
+
+		let successfulMove = () => {
+			this.playerService.nextPlayer();
+			this.pickedPiece = undefined;
 		}
 
 		let move = (pickedPiece: IPiece, to: Point) => {
@@ -96,8 +104,11 @@ export class BoardService {
 
 		if(checkIfValidMove()){
 			move(pickedPiece, to);
-			this.playerService.nextPlayer();
+			successfulMove();
+			return;
 		}
+
+		this.resetMove();
 	}
 
 	private initPieces() {

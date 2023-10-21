@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BoardService } from './board.service';
 import { Point } from './cell/cell.component';
 import { PlayerService } from '../player/player.service';
+import { IBoardService } from './i-board-service';
+import { IPlayerService } from '../player/i-player.service';
 
 @Component({
 	selector: 'app-board',
@@ -12,7 +14,11 @@ import { PlayerService } from '../player/player.service';
 
 export class BoardComponent {
 
-	constructor(private playerService:PlayerService, private board: BoardService) {
+	constructor(@Inject('IPlayerService')private playerService:IPlayerService, @Inject('IBoardService') private board: IBoardService) {
+	}
+
+	public get currentPlayer() {
+		return this.playerService.currentPlayer;
 	}
 
 	public get resetMove$(): Observable<boolean> {

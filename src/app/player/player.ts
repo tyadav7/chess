@@ -1,6 +1,6 @@
 import { IPiece } from "../piece/pieces/i-piece";
 
-export class Player {
+export class Player implements IPlayer {
     
     private _pieces: IPiece[] = []
 

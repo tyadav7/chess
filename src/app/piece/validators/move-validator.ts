@@ -1,27 +1,23 @@
 import { Inject, Injectable } from "@angular/core";
-import { BoardService } from "src/app/board/board.service";
-import { IMoveValidator } from "./i-move-validator";
 import { IPoint } from "src/app/board/cell/cell.component";
-import { PlayerService } from "src/app/player/player.service";
+import { IBoardService } from "src/app/board/i-board-service";
+import { IPlayerService } from "src/app/player/i-player.service";
 import { IObstructionValidator } from "../obstructors/i-obstruction-validator";
+import { IMoveValidator } from "./i-move-validator";
 
 @Injectable()
 export abstract class MoveValidator implements IMoveValidator {
 
-    abstract validate(from: IPoint, to: IPoint): boolean;
+    abstract validateMove(from: IPoint, to: IPoint): boolean;
 
     constructor(
-        private _boardService: BoardService, 
-        private _playerService: PlayerService, 
+        @Inject('IBoardService') private _boardService: IBoardService, 
+        @Inject('IPlayerService') private _playerService: IPlayerService, 
         @Inject('IObstructionValidator') private _obstructionValidatorService: IObstructionValidator) {
     }
 
-    public get player1() {
-        return this._playerService.currentPlayer === this._playerService.player1;
-    }
-
-    public get player2() {
-        return this._playerService.currentPlayer === this._playerService.player2;
+    public get direction() {
+        return this.playerService.currentPlayer === this.playerService.player1 ? 1 : -1;
     }
 
     public get boardService() {

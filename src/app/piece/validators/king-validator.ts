@@ -11,7 +11,7 @@ import { IPoint } from "src/app/board/cell/cell.component";
 })
 export class KingValidator extends MoveValidator implements IMoveValidator {
     
-    override validate(from: IPoint, to: IPoint): boolean {
+    override validateMove(from: IPoint, to: IPoint): boolean {
         throw new Error("Method not implemented.");
     }
 }
