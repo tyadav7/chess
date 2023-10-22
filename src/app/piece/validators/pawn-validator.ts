@@ -11,7 +11,7 @@ export class PawnValidator extends MoveValidator implements IMoveValidator {
     override validateMove(from: IPoint, to: IPoint): boolean {
 
         let ifToOccupied = (): boolean => {
-            return this.obstructionValidatorService.checkIfSpotIsOccupied(to);
+            return this.obstructionValidator.checkIfSpotIsOccupied(to);
         }
 
         let ifToOccupiedByOpponent = (): boolean => {
@@ -19,7 +19,7 @@ export class PawnValidator extends MoveValidator implements IMoveValidator {
         }
 
         let ifObstructed = (): boolean => {
-            return this.obstructionValidatorService.isObstructed(from, to);
+            return this.obstructionValidator.isObstructed(from, to);
         }
 
         let isInitialPawnMoveValid = (): boolean => {

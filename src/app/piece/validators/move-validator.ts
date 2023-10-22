@@ -13,22 +13,34 @@ export abstract class MoveValidator implements IMoveValidator {
     constructor(
         @Inject('IBoardService') private _boardService: IBoardService, 
         @Inject('IPlayerService') private _playerService: IPlayerService, 
-        @Inject('IObstructionValidator') private _obstructionValidatorService: IObstructionValidator) {
+        @Inject('IObstructionValidator') private _obstructionValidator: IObstructionValidator) {
     }
 
-    public get direction() {
+    protected isObstructed(from: IPoint, to: IPoint): boolean {
+        return this._obstructionValidator.isObstructed(from, to);
+    }
+
+    protected isToOccupied(to: IPoint): boolean {
+        return this._obstructionValidator.checkIfSpotIsOccupied(to);
+    }
+
+    protected isToOccupiedByOpponent(to: IPoint): boolean {
+        return this.isToOccupied(to) && this.boardService.view[to.x][to.y] && this.boardService.view[to.x][to.y].player !== this.playerService.currentPlayer;
+    }
+
+    protected get direction() {
         return this.playerService.currentPlayer === this.playerService.player1 ? 1 : -1;
     }
 
-    public get boardService() {
+    protected get boardService() {
         return this._boardService;
     }
 
-    public get playerService() {
+    protected get playerService() {
         return this._playerService;
     }
 
-    public get obstructionValidatorService() {
-        return this._obstructionValidatorService;
+    protected get obstructionValidator() {
+        return this._obstructionValidator;
     }
 }
