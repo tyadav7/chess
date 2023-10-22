@@ -10,36 +10,39 @@ export class RookValidator extends MoveValidator implements IMoveValidator {
 
     override validateMove(from: IPoint, to: IPoint): boolean {
 
-        let ifToOccupied = (): boolean => {
+        let isToOccupied = (): boolean => {
             return this.obstructionValidatorService.checkIfSpotIsOccupied(to);
         }
 
-        let ifToOccupiedByOpponent = (): boolean => {
+        let isToOccupiedByOpponent = (): boolean => {
             return this.boardService.view[to.x][to.y] && this.boardService.view[to.x][to.y].player !== this.playerService.currentPlayer;
         }
 
-        let ifObstructed = (): boolean => {
+        let isObstructed = (): boolean => {
             return this.obstructionValidatorService.isObstructed(from, to);
         }
 
+        let isStraightMove = (): boolean => {
+            return (to.y - from.y === 0 || to.x - from.x === 0);
+        }
+
         let isRookMoveValid = (): boolean => {
-            return (to.y - from.y === 0 || to.x - from.x === 0) && !ifObstructed() && !ifToOccupied();
+            return isStraightMove() && !isObstructed() && !isToOccupied();
         }
 
         let isRookCaptureMoveValid = (): boolean => {
-            return (to.y - from.y === 0 || to.x - from.x === 0) && ifToOccupiedByOpponent();
+            return isStraightMove() && !isObstructed() && isToOccupiedByOpponent();
         }
 
-        if (isRookMoveValid()) {
+        if(isRookMoveValid()){
             return true;
         }
 
-        if (isRookCaptureMoveValid()) {
+        if(isRookCaptureMoveValid()){
             return true;
         }
 
         return false;
-        
     }
 
 }

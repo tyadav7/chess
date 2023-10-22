@@ -118,6 +118,16 @@ describe('RookValidator', () => {
         spyOn(mockObstructionService, 'isObstructed').and.returnValue(true);
         spyOn(mockObstructionService, 'checkIfSpotIsOccupied').and.returnValue(false);
         let result = rookValidator.validateMove(from, to);
-        expect(result).toBe(false);
+        expect(result).toBeFalsy();
+    });
+
+    it('should not allow to capture a piece that is obstructed', () => {
+        let from: IPoint = { x: 0, y: 0 };
+        let to: IPoint = { x: 5, y: 0 };
+        mockBoardService.view = [[new Rook(from, mockPlayerService.player1)],[],[new Rook( { x: 2 , y: 0 }, mockPlayerService.player1)],[],[],[new Rook( { x: 5 , y: 0 }, mockPlayerService.player2)]];
+        spyOn(mockObstructionService, 'isObstructed').and.returnValue(true);
+        spyOn(mockObstructionService, 'checkIfSpotIsOccupied').and.returnValue(false);
+        let result = rookValidator.validateMove(from, to);
+        expect(result).toBeFalsy();
     });
 });
