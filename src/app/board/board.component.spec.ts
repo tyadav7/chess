@@ -13,6 +13,7 @@ import { CellComponent, IPoint } from './cell/cell.component';
 
 const playerServiceMock = {
   currentPlayer: { color: 'White' },
+  opponentPlayer: { color: 'Black', isKingInCheck: false },
   players: [],
 };
 

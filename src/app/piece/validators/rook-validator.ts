@@ -9,10 +9,10 @@ import { MoveValidator } from "./move-validator";
 export class RookValidator extends MoveValidator implements IMoveValidator {
 
     override validateMove(from: IPoint, to: IPoint): boolean {
-        
+
         let isObstructed = this.isObstructed(from, to);
         let isToOccupied = this.isToOccupied(to);
-        let isToOccupiedByOpponent = this.isToOccupiedByOpponent(to);
+        let isToOccupiedByOpponent = this.isToOccupiedByOpponent(from, to);
 
         let isStraightMove = (): boolean => {
             return (to.y - from.y === 0 || to.x - from.x === 0);

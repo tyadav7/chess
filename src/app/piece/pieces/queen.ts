@@ -3,7 +3,6 @@ import { PieceComponent } from '../piece.component';
 import { QueenValidator } from '../validators/queen-validator';
 import { IPiece } from './i-piece';
 import { Piece } from './piece';
-import { ObstructionValidatorService } from '../obstructors/obstruction.service';
 
 @Component({
 	selector: 'app-queen',

@@ -8,12 +8,11 @@ import { BoardService } from 'src/app/board/board.service';
 import { ObstructionValidatorService } from '../obstructors/obstruction.service';
 import { Player } from 'src/app/player/player';
 import { PlayerService } from 'src/app/player/player.service';
+import { King } from '../pieces/king';
 
 const mockObstructionService: IObstructionValidator = MockService(ObstructionValidatorService);
 const mockBoardService = MockService(BoardService);
 const mockPlayerService = MockService(PlayerService);
-const player1 = new Player('white', 'player1');
-const player2 = new Player('black', 'player2');
 
 describe('RookValidator', () => {
 	let rookValidator: RookValidator;
@@ -27,6 +26,8 @@ describe('RookValidator', () => {
         });
 
 		rookValidator = TestBed.inject(RookValidator);
+        const player1 = new Player('white', 'player1');
+        const player2 = new Player('black', 'player2');
         spyOnProperty(mockPlayerService, 'player1', 'get').and.returnValue(player1);
         spyOnProperty(mockPlayerService, 'player2', 'get').and.returnValue(player2);
         mockPlayerService.currentPlayer = mockPlayerService.player1;
@@ -96,5 +97,27 @@ describe('RookValidator', () => {
         spyOn(mockObstructionService, 'checkIfSpotIsOccupied').and.returnValue(false);
         let result = rookValidator.validateMove(from, to);
         expect(result).toBeFalsy();
+    });
+
+    it('should return true if the opponent king is in check', () => {
+        let from: IPoint = { x: 0, y: 0 };
+        let to: IPoint = { x: 5, y: 0 };
+        spyOnProperty(mockPlayerService, 'currentPlayer', 'get').and.returnValue(mockPlayerService.player2);  
+        spyOnProperty(mockBoardService, 'view', 'get').and.returnValue([[new Rook(from, mockPlayerService.player1)],[],[],[],[],[new King( { x: 5 , y: 0 }, mockPlayerService.player2)]]);
+        spyOn(mockObstructionService, 'isObstructed').and.returnValue(false);
+        spyOn(mockObstructionService, 'checkIfSpotIsOccupied').and.returnValue(true);
+        let result = rookValidator.validateMove(from, to);
+        expect(result).toBe(true);
+    });
+
+    it('should return false if the opponent king is not in check', () => {
+        let from: IPoint = { x: 0, y: 0 };
+        let rook = new Rook(from, mockPlayerService.player1);
+        spyOnProperty(mockPlayerService, 'currentPlayer', 'get').and.returnValue(mockPlayerService.player2);  
+        spyOnProperty(mockBoardService, 'view', 'get').and.returnValue([[rook],[],[],[],[],[,new King( { x: 5 , y: 1 }, mockPlayerService.player2)]]);
+        spyOn(mockObstructionService, 'isObstructed').and.returnValue(false);
+        spyOn(mockObstructionService, 'checkIfSpotIsOccupied').and.returnValue(false);
+        let result = rookValidator.isOpponentKingInCheck(rook);
+        expect(result).toBe(false);
     });
 });

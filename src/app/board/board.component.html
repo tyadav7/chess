@@ -32,4 +32,7 @@
 
 <div class="player-label">
     {{currentPlayer.color}}'s turn
+    <ng-container *ngIf="opponentPlayer.isOpponentKingInCheck">
+        <span class="check">Check</span>
+    </ng-container>
 </div>

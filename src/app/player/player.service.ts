@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Player } from './player';
 import { IPlayerService } from './i-player.service';
+import { IPiece } from '../piece/pieces/i-piece';
 
 @Injectable({
 	providedIn: 'root'
@@ -12,6 +13,11 @@ export class PlayerService implements IPlayerService {
 	private _currentPlayer: Player = this.player1;
 
 	constructor() { }
+
+	public onPieceCaptured(piece: IPiece) {
+		this.opponentPlayer.capturedPieces.push(piece);
+		this.opponentPlayer.pieces.splice(this.opponentPlayer.pieces.indexOf(piece), 1);
+	}
 
 	public nextPlayer() {
 		this.currentPlayer = this.currentPlayer === this.player1 ? this.player2 : this.player1;
@@ -31,6 +37,10 @@ export class PlayerService implements IPlayerService {
 
 	public set currentPlayer(player: Player) {
 		this._currentPlayer = player;
+	}
+
+	public get opponentPlayer() {
+		return this.currentPlayer === this.player1 ? this.player2 : this.player1;
 	}
 
 	public get currentPlayer() {

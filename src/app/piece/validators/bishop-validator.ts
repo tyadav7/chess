@@ -12,7 +12,7 @@ export class BishopValidator extends MoveValidator implements IMoveValidator {
 
         let isObstructed = this.isObstructed(from, to);
         let isToOccupied = this.isToOccupied(to);
-        let isToOccupiedByOpponent = this.isToOccupiedByOpponent(to);
+        let isToOccupiedByOpponent = this.isToOccupiedByOpponent(from, to);
         
         let isDiagonalMove = (): boolean => {
             return Math.abs(to.x - from.x) === Math.abs(to.y - from.y);

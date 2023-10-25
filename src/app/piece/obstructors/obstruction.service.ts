@@ -63,10 +63,10 @@ export class ObstructionValidatorService implements IObstructionValidator {
 			let y = from.y;
 			let xDirection = from.x < to.x ? 1 : -1;
 			let yDirection = from.y < to.y ? 1 : -1;
-			while (x !== to.x && y !== to.y) {
+			while (x !== to.x - xDirection && y !== to.y - yDirection) {
 				x += xDirection;
 				y += yDirection;
-				if (this.boardService.view[x][y]) {
+				if (this.boardService.view[x][y] && x !== to.x && y !== to.y) {
 					return true;
 				}
 			}
@@ -102,7 +102,7 @@ export class ObstructionValidatorService implements IObstructionValidator {
 			if(checkIfMoveDiaganoally(from, to)) {
 				return this.checkIfObstructionInDiagonal(from, to);
 			}
-			throw new Error('Move not straight or diagonal');
+			return false;
 		}
 
 		return checkIfObstruction(from, to);

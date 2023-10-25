@@ -4,6 +4,7 @@ import { IBoardService } from "src/app/board/i-board-service";
 import { IPlayerService } from "src/app/player/i-player.service";
 import { IObstructionValidator } from "../obstructors/i-obstruction-validator";
 import { IMoveValidator } from "./i-move-validator";
+import { IPiece, MOVETYPES } from "../pieces/i-piece";
 
 @Injectable()
 export abstract class MoveValidator implements IMoveValidator {
@@ -24,12 +25,18 @@ export abstract class MoveValidator implements IMoveValidator {
         return this._obstructionValidator.checkIfSpotIsOccupied(to);
     }
 
-    protected isToOccupiedByOpponent(to: IPoint): boolean {
-        return this.isToOccupied(to) && this.boardService.view[to.x][to.y] && this.boardService.view[to.x][to.y].player !== this.playerService.currentPlayer;
+    protected isToOccupiedByOpponent(from: IPoint, to:IPoint): boolean {
+        return this.isToOccupied(to) && this.boardService.view[to.x][to.y] && this.boardService.view[to.x][to.y].player !== this.boardService.view[from.x][from.y].player;
     }
 
-    protected get direction() {
-        return this.playerService.currentPlayer === this.playerService.player1 ? 1 : -1;
+    public isOpponentKingInCheck(piece: IPiece): boolean {
+        if(this.playerService.currentPlayer.king)
+            return this.validateMove(piece.position, this.playerService.currentPlayer.king.position);
+        return false;
+    }
+
+    protected direction(from:IPoint) {
+        return this.boardService.view[from.x][from.y].player === this.playerService.player1 ? 1 : -1;
     }
 
     protected get boardService() {
@@ -42,5 +49,9 @@ export abstract class MoveValidator implements IMoveValidator {
 
     protected get obstructionValidator() {
         return this._obstructionValidator;
+    }
+
+    public isSpecialMoveValid(from: IPoint, to: IPoint): MOVETYPES {
+        return MOVETYPES.SIMPLE;
     }
 }

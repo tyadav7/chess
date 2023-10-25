@@ -1,16 +1,15 @@
 import { Component, DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { MockService } from 'ng-mocks';
 import { Player } from '../player/player';
 import { PieceComponent } from './piece.component';
 import { IPiece } from './pieces/i-piece';
 import { Pawn } from './pieces/pawn';
-import { IMoveValidator } from './validators/i-move-validator';
+import { PawnValidator } from './validators/pawn-validator';
 
 const mockPiece = new Pawn({ x: 0, y: 0 }, new Player('white', 'player1'));
-const mockPawnValidator: IMoveValidator = {
-  validateMove: (from, to) => true
-}
+const mockPawnValidator = MockService(PawnValidator);
 
 @Component({
   selector: 'app-test-piece',
@@ -21,9 +20,7 @@ const mockPawnValidator: IMoveValidator = {
 class TestPieceComponent extends PieceComponent {
 }
 @Component({
-  template: `
-    <app-test-piece [piece]="piece"></app-test-piece>
-  `
+  template: `<app-test-piece [piece]="piece"></app-test-piece>`
 })
 class TestHostComponent {
   piece: IPiece = mockPiece;

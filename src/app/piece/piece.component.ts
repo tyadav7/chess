@@ -20,6 +20,5 @@ export abstract class PieceComponent {
 	}
 
 	constructor(@Inject('IMoveValidator') private validator: IMoveValidator) {
-		console.log(validator);
 	}
 }

@@ -88,7 +88,7 @@ describe('ObstructionValidatorService', () => {
     it('should return false if there is no obstruction in a straight line vertically', () => {
         const from: IPoint = { x: 0, y: 1 };
         const to: IPoint = { x: 3, y: 1 };
-        modifyViewValue([[, { piece: {} }], new Array(2), new Array(2), new Array(2)]);
+        modifyViewValue([[, { piece: {} }], new Array(2), new Array(2), [, { piece: {} }], new Array(2)]);
         const result = service.isObstructed(from, to);
         expect(result).toBe(false);
     });
@@ -123,10 +123,10 @@ describe('ObstructionValidatorService', () => {
         const from: IPoint = { x: 0, y: 0 };
         const to: IPoint = { x: 3, y: 3 };
         modifyViewValue([
-            [{ piece: {} }, , ,], 
+            [{ piece: {} }], 
             new Array(4), 
             new Array(4),
-            new Array(4), 
+            [,,,{ piece: {} }], 
         ]);
         const result = service.isObstructed(from, to);
         expect(result).toBe(false);

@@ -4,6 +4,7 @@ import { Piece } from './piece';
 import { PieceComponent } from '../piece.component';
 import { RookValidator } from '../validators/rook-validator';
 import { ObstructionValidatorService } from '../obstructors/obstruction.service';
+import { IPoint } from 'src/app/board/cell/cell.component';
 
 @Component({
 	selector: 'app-rook',
@@ -16,6 +17,17 @@ import { ObstructionValidatorService } from '../obstructors/obstruction.service'
 export class RookComponent extends PieceComponent {
 }
 export class Rook extends Piece implements IPiece {
+
+	private _moved: boolean = false;
+
+	public override makeMove(to: IPoint) {
+		super.makeMove(to);
+		this._moved = true;
+	}
+
+	public get moved() {
+		return this._moved;
+	}
 
 	public get name() {
 		return "Rook";

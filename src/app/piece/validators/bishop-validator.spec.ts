@@ -9,12 +9,11 @@ import { BishopValidator } from './bishop-validator';
 import { Bishop } from '../pieces/bishop';
 import { Rook } from '../pieces/rook';
 import { Player } from 'src/app/player/player';
+import { King } from '../pieces/king';
 
 const mockObstructionService: IObstructionValidator = MockService(ObstructionValidatorService);
 const mockBoardService = MockService(BoardService);
 const mockPlayerService = MockService(PlayerService);
-const player1 = new Player('white', 'player1');
-const player2 = new Player('black', 'player2');
 
 describe('BishopValidator', () => {
 	let bishopValidator: BishopValidator;
@@ -28,6 +27,8 @@ describe('BishopValidator', () => {
         });
 
 		bishopValidator = TestBed.inject(BishopValidator);
+        const player1 = new Player('white', 'player1');
+        const player2 = new Player('black', 'player2');
         spyOnProperty(mockPlayerService, 'player1', 'get').and.returnValue(player1);
         spyOnProperty(mockPlayerService, 'player2', 'get').and.returnValue(player2);
         mockPlayerService.currentPlayer = mockPlayerService.player1;
@@ -97,5 +98,27 @@ describe('BishopValidator', () => {
         spyOn(mockObstructionService, 'checkIfSpotIsOccupied').and.returnValue(false);
         let result = bishopValidator.validateMove(from, to);
         expect(result).toBeFalsy();
+    });
+
+    it('should return true if the opponent king is in check', () => {
+        let from: IPoint = { x: 0, y: 0 };
+        let bishop = new Bishop(from, mockPlayerService.player1);
+        spyOnProperty(mockPlayerService, 'currentPlayer', 'get').and.returnValue(mockPlayerService.player2);  
+        spyOnProperty(mockBoardService, 'view', 'get').and.returnValue([[bishop],[],[],[],[],[,,,,,new King( { x: 5 , y: 5 }, mockPlayerService.player2)]]);
+        spyOn(mockObstructionService, 'isObstructed').and.returnValue(false);
+        spyOn(mockObstructionService, 'checkIfSpotIsOccupied').and.returnValue(true);
+        let result = bishopValidator.isOpponentKingInCheck(bishop);
+        expect(result).toBe(true);
+    });
+
+    it('should return false if the opponent king is not in check', () => {
+        let from: IPoint = { x: 0, y: 0 };
+        let bishop = new Bishop(from, mockPlayerService.player1);
+        spyOnProperty(mockPlayerService, 'currentPlayer', 'get').and.returnValue(mockPlayerService.player2);  
+        spyOnProperty(mockBoardService, 'view', 'get').and.returnValue([[bishop],[],[],[],[],[,new King( { x: 5 , y: 1 }, mockPlayerService.player2)]]);
+        spyOn(mockObstructionService, 'isObstructed').and.returnValue(false);
+        spyOn(mockObstructionService, 'checkIfSpotIsOccupied').and.returnValue(false);
+        let result = bishopValidator.isOpponentKingInCheck(bishop);
+        expect(result).toBe(false);
     });
 });

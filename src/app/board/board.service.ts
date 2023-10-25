@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Position } from '../piece/movable.directive';
-import { Bishop } from '../piece/pieces/bishop';
-import { IPiece } from '../piece/pieces/i-piece';
+import { IPiece, MOVETYPES } from '../piece/pieces/i-piece';
 import { King } from '../piece/pieces/king';
-import { Knight } from '../piece/pieces/knight';
 import { Pawn } from '../piece/pieces/pawn';
 import { Queen } from '../piece/pieces/queen';
 import { Rook } from '../piece/pieces/rook';
-import { Point } from './cell/cell.component';
 import { PlayerService } from '../player/player.service';
+import { Point } from './cell/cell.component';
 import { IBoardService } from './i-board-service';
+import { Knight } from '../piece/pieces/knight';
+import { Bishop } from '../piece/pieces/bishop';
 
 @Injectable({
 	providedIn: 'root',
@@ -48,17 +48,16 @@ export class BoardService implements IBoardService {
 		});
 	}
 
-	public pick(dropPosition: Position) {
+	public pick(position: Position) {
 		let checkIfPieceIsAlreadyPicked = () => {
-			if (this.pickedPiece && this.pickedPiece.position.x === dropPosition.x && this.pickedPiece.position.y === dropPosition.y) {
+			if (this.pickedPiece && this.pickedPiece.position.x === position.x && this.pickedPiece.position.y === position.y) {
 				this.resetMove();
 				throw new Error('Piece already picked');
 			}
 		}
 
 		checkIfPieceIsAlreadyPicked();
-		this.pickedPiece = this._board[dropPosition.x][dropPosition.y];
-		console.log(this.pickedPiece);
+		this.pickedPiece = this._board[position.x][position.y];
 	}
 
 	public drop(position: Position) {
@@ -77,7 +76,6 @@ export class BoardService implements IBoardService {
 			}
 		}
 
-		console.log(this.pickedPiece);
 		checkIfPieceIsPicked();
 		checkIfCorrectPlayer();
 		if(this.pickedPiece) {
@@ -95,14 +93,51 @@ export class BoardService implements IBoardService {
 			this.pickedPiece = undefined;
 		}
 
+		let performPieceCaptureOperationIfAny = () => {
+			if(this._board[to.x][to.y]) {
+				this.playerService.onPieceCaptured(this._board[to.x][to.y]);
+			}
+		}
+
+		let isSpecialMove = () => {
+			return this.pickedPiece?.isSpecialMove(to);
+		}
+
 		let move = (pickedPiece: IPiece, to: Point) => {
-			this._board[pickedPiece.position.x][pickedPiece.position.y] = null;
-			pickedPiece.position = to;
-			this._board[to.x][to.y] = this.pickedPiece;
+			if(isSpecialMove() == MOVETYPES.SIMPLE) {
+				this._board[pickedPiece.position.x][pickedPiece.position.y] = null;
+				pickedPiece.makeMove(to);
+				performPieceCaptureOperationIfAny();
+				this._board[to.x][to.y] = this.pickedPiece;
+			}
+			if(isSpecialMove() == MOVETYPES.CASTLINGK) {
+				this._board[pickedPiece.position.x][pickedPiece.position.y] = null;
+				pickedPiece.makeMove(to);
+				this._board[to.x][to.y] = this.pickedPiece;
+				let rook:Rook = this._board[to.x][7];
+				this._board[to.x][7] = null;
+				this._board[to.x][5] = rook;
+				rook.makeMove(new Point(to.x, 5));
+			}
+			if(isSpecialMove() == MOVETYPES.CASTLINGQ) {
+				this._board[pickedPiece.position.x][pickedPiece.position.y] = null;
+				pickedPiece.makeMove(to);
+				this._board[to.x][to.y] = this.pickedPiece;
+				let rook:Rook = this._board[to.x][0];
+				this._board[to.x][0] = null;
+				this._board[to.x][3] = rook;
+				rook.makeMove(new Point(to.x, 3));
+			}
+			if(isSpecialMove() == MOVETYPES.PROMOTION) {
+				let promotedPawn: Pawn = this._board[pickedPiece.position.x][pickedPiece.position.y];
+				this._board[pickedPiece.position.x][pickedPiece.position.y] = null;
+				this.playerService.currentPlayer.pieces.splice(this.playerService.currentPlayer.pieces.indexOf(promotedPawn), 1);
+				this._board[to.x][to.y] = new Queen(to, this.playerService.currentPlayer);
+			}
 			this._board[to.x] = [...this._board[to.x]];
 		}
 
-		if(checkIfValidMove()){
+		if(checkIfValidMove()) {
 			move(pickedPiece, to);
 			successfulMove();
 			return;
@@ -133,11 +168,11 @@ export class BoardService implements IBoardService {
 		this._board[7][1] = new Knight(new Point(7, 1), this.playerService.player2);
 		this._board[7][6] = new Knight(new Point(7, 6), this.playerService.player2);
 
-		this._board[0][3] = new King(new Point(0, 3), this.playerService.player1);
-		this._board[7][3] = new King(new Point(7, 3), this.playerService.player2);
+		this._board[0][4] = new King(new Point(0, 4), this.playerService.player1);
+		this._board[7][4] = new King(new Point(7, 4), this.playerService.player2);
 
-		this._board[0][4] = new Queen(new Point(0, 4), this.playerService.player1);
-		this._board[7][4] = new Queen(new Point(7, 4), this.playerService.player2);
+		this._board[0][3] = new Queen(new Point(0, 3), this.playerService.player1);
+		this._board[7][3] = new Queen(new Point(7, 3), this.playerService.player2);
 
 	}
 
