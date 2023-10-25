@@ -3,7 +3,7 @@
         <div class="row">
             <ng-container *ngFor="let piece of row; index as y">
                 <app-cell [point]="{x: x, y:y}">
-                    {{x}},{{y}}
+                    <!-- {{x}},{{y}} -->
                     <ng-container *ngIf="piece">
                         <ng-container *ngIf="piece.name == 'Pawn'">
                             <app-pawn appMovable [appMovableReset]="(resetMove$ | async) || false" [piece]="piece"></app-pawn>
